@@ -67,6 +67,8 @@ class RandomChar extends React.Component {
     }
 
     render() {
+        const {character, loading} = this.state;
+
         let descriptionLength;
         if(this.state.character.description) {
             descriptionLength = this.getTotalWordsCount(this.state.character.description);
@@ -84,26 +86,7 @@ class RandomChar extends React.Component {
         return (
             <div className="randomchar">
                 {
-                    this.state.loading ?
-                        <Spinner/>
-                        :
-                        <div className="randomchar__block">
-                            <img src={this.state.character.thumbnail} alt="Random character" className="randomchar__img"/>
-                            <div className="randomchar__info">
-                                <p className="randomchar__name">{this.state.character.name}</p>
-                                <p className="randomchar__descr">
-                                    {description}
-                                </p>
-                                <div className="randomchar__btns">
-                                    <a href={this.state.character.homepage} className="button button__main">
-                                        <div className="inner">homepage</div>
-                                    </a>
-                                    <a href={this.state.character.wiki} className="button button__secondary">
-                                        <div className="inner">Wiki</div>
-                                    </a>
-                                </div>
-                            </div>
-                        </div>
+                    loading ? <Spinner/> : <View {...character} description={description}/>
                 }
                 <div className="randomchar__static">
                     <p className="randomchar__title">
@@ -121,6 +104,29 @@ class RandomChar extends React.Component {
             </div>
         )
     }
+}
+
+const View = (props) => {
+    const {thumbnail, name, description, homepage, wiki} = props
+    return (
+        <div className="randomchar__block">
+            <img src={thumbnail} alt="Random character" className="randomchar__img"/>
+            <div className="randomchar__info">
+                <p className="randomchar__name">{name}</p>
+                <p className="randomchar__descr">
+                    {description}
+                </p>
+                <div className="randomchar__btns">
+                    <a href={homepage} className="button button__main">
+                        <div className="inner">homepage</div>
+                    </a>
+                    <a href={wiki} className="button button__secondary">
+                        <div className="inner">Wiki</div>
+                    </a>
+                </div>
+            </div>
+        </div>
+    )
 }
 
 export default RandomChar;
