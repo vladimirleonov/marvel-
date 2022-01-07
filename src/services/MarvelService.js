@@ -7,9 +7,10 @@ export default class MarvelService {
         let response = await fetch('https://gateway.marvel.com:443/v1/public/characters?limit=9&offset=300&apikey=c8f1b9d4937ef1256f1d96898ca20f7e')
         return response.json();
     }
-    getCharacter = async () => {
+    getCharacter = async (id) => {
         /*const response = await fetch('https://gateway.marvel.com:443/v1/public/characters/1011031?apikey=c8f1b9d4937ef1256f1d96898ca20f7e');*/
-        const response = await this.getResource('https://gateway.marvel.com:443/v1/public/characters/1011031?apikey=c8f1b9d4937ef1256f1d96898ca20f7e');
+        const response = await this.getResource(`https://gateway.marvel.com:443/v1/public/characters/${id}?apikey=c8f1b9d4937ef1256f1d96898ca20f7e`);
+        console.log(response);
         return {
             name: response.data.results[0].name,
             description: response.data.results[0].description,

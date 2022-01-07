@@ -9,7 +9,7 @@ class RandomChar extends React.Component {
     constructor(props) {
         super(props);
         this.state=({
-            character: {
+            char: {
                 name: null,
                 description: null,
                 thumbnail: null,
@@ -22,19 +22,34 @@ class RandomChar extends React.Component {
 
     marvelService = new MarvelService();
 
-    async componentDidMount() {
+    componentDidMount() {
+        this.updateCharacter();
+    }
+
+    toggleLoading(value) {
         this.setState({
             ...this.state,
-            loading: true
+            loading: value
         })
-        const character = await this.marvelService.getCharacter();
-        this.setState({
-            ...this.state,
-            character: {
-                ...character
-            },
-            loading: false
-        })
+    }
+
+    updateCharacter = async () => {
+        try {
+            this.toggleLoading(true);
+            let id = Math.floor(Math.random() * (1011400 - 1011000) + 1011000);
+            const char = await this.marvelService.getCharacter(id);
+            console.log(char);
+            this.setState({
+                ...this.state,
+                char: {
+                    ...char
+                }
+            });
+            this.toggleLoading(false);
+        }
+        catch(err) {
+            
+        }
     }
 
     getTotalWordsCount(str) {
@@ -67,26 +82,29 @@ class RandomChar extends React.Component {
     }
 
     render() {
-        const {character, loading} = this.state;
+        const {char, loading} = this.state;
 
         let descriptionLength;
-        if(this.state.character.description) {
-            descriptionLength = this.getTotalWordsCount(this.state.character.description);
+        if(char.description) {
+            descriptionLength = this.getTotalWordsCount(char.description);
         } else {
             descriptionLength = 0
         }
 
         let description;
-        if(this.state.character.description && descriptionLength > 20) {
-            description = this.getCroppedString(this.state.character.description, 20) + '...'
+        if(char.description && descriptionLength > 20) {
+            console.log(char.description);
+            description = this.getCroppedString(char.description, 20) + '...'
         } else {
-            description = this.state.character.description
+            description = char.description
         }
 
         return (
             <div className="randomchar">
                 {
-                    loading ? <Spinner/> : <View {...character} description={description}/>
+                    loading ?
+                        <Spinner/> :
+                        <View char={char} description={description}/>
                 }
                 <div className="randomchar__static">
                     <p className="randomchar__title">
@@ -96,7 +114,7 @@ class RandomChar extends React.Component {
                     <p className="randomchar__title">
                         Or choose another one
                     </p>
-                    <button className="button button__main">
+                    <button className="button button__main" onClick={this.updateCharacter}>
                         <div className="inner">try it</div>
                     </button>
                     <img src={mjolnir} alt="mjolnir" className="randomchar__decoration"/>
@@ -106,8 +124,8 @@ class RandomChar extends React.Component {
     }
 }
 
-const View = (props) => {
-    const {thumbnail, name, description, homepage, wiki} = props
+const View = ({char, description}) => {
+    const {thumbnail, name, homepage, wiki} = char;
     return (
         <div className="randomchar__block">
             <img src={thumbnail} alt="Random character" className="randomchar__img"/>
