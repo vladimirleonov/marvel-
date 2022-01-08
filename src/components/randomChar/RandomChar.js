@@ -1,6 +1,5 @@
 import React from "react";
 import './randomChar.scss';
-import thor from '../../resources/img/thor.jpeg';
 import mjolnir from '../../resources/img/mjolnir.png';
 import MarvelService from "../../services/MarvelService";
 import Spinner from "../spinner/Spinner";
@@ -16,7 +15,7 @@ class RandomChar extends React.Component {
                 homepage: null,
                 wiki: null
             },
-            loading: false
+            isLoading: false
         })
     }
 
@@ -26,29 +25,29 @@ class RandomChar extends React.Component {
         this.updateCharacter();
     }
 
-    toggleLoading(value) {
+    toggleIsLoading(value) {
         this.setState({
             ...this.state,
-            loading: value
+            isLoading: value
         })
     }
 
     updateCharacter = async () => {
         try {
-            this.toggleLoading(true);
+            this.toggleIsLoading(true);
             let id = Math.floor(Math.random() * (1011400 - 1011000) + 1011000);
             const char = await this.marvelService.getCharacter(id);
-            console.log(char);
+            /*console.log(char);*/
             this.setState({
                 ...this.state,
                 char: {
                     ...char
                 }
             });
-            this.toggleLoading(false);
+            this.toggleIsLoading(false);
         }
         catch(err) {
-            
+            console.log(err);
         }
     }
 
@@ -67,7 +66,7 @@ class RandomChar extends React.Component {
 
     getCroppedString(str, n) {
         let wordsArr = str.split(" ");
-        console.log(wordsArr);
+        /*console.log(wordsArr);*/
 
         let croppedWordsArr = [];
 
@@ -76,7 +75,7 @@ class RandomChar extends React.Component {
                 croppedWordsArr.push(item);
             }
         })
-        console.log(croppedWordsArr);
+        /*console.log(croppedWordsArr);*/
         const strNew =  croppedWordsArr.join(' ');
         return strNew;
     }
@@ -93,8 +92,10 @@ class RandomChar extends React.Component {
 
         let description;
         if(char.description && descriptionLength > 20) {
-            console.log(char.description);
+            /*console.log(char.description);*/
             description = this.getCroppedString(char.description, 20) + '...'
+        } else if(!char.description) {
+            description = 'There is no description'
         } else {
             description = char.description
         }
