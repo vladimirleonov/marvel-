@@ -37,25 +37,19 @@ class CharList extends React.Component{
     }
 
     setActiveChar(id) {
-
+        this.props.setActiveChar(id);
     }
 
     render () {
-
-        let chars = this.state.chars ?
-            this.state.chars.map(item =>
-                <li className="char__item" onClick={() => this.setActiveChar(item.id)}>
-                    <img src={item.thumbnail} alt="abyss"/>
-                    <div className="char__name">{item.name}</div>
-                </li>
-            )
-            :
-            <Spinner/>
-
         return (
             <div className="char__list">
                 <ul className="char__grid">
-                    {chars}
+                    {this.state.chars.map(item =>
+                    <li className="char__item" onClick={() => this.setActiveChar(item.id)}>
+                        <img src={item.thumbnail} alt="abyss"/>
+                        <div className="char__name">{item.name}</div>
+                    </li>
+                    )}
                     {/*className="char__item char__item_selected*/}
                 </ul>
                 <button className="button button__main button__long">

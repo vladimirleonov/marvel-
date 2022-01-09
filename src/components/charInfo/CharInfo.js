@@ -1,9 +1,32 @@
+import React from "react";
 import './charInfo.scss';
+import Skeleton from "../skeleton/Skeleton";
 import thor from '../../resources/img/thor.jpeg';
 
-const CharInfo = () => {
+class CharInfo extends React.Component {
+
+    componentDidMount() {
+        if(this.props.activeChar) {
+
+        }
+    }
+
+    render () {
+        const {activeChar} = this.props;
+        console.log(activeChar);
+        return (
+            <div className="char__info">
+                {!activeChar ?
+                    <Skeleton/> :
+                    <View/>}
+            </div>
+        )
+    }
+}
+
+const View = () =>  {
     return (
-        <div className="char__info">
+        <>
             <div className="char__basics">
                 <img src={thor} alt="abyss"/>
                 <div>
@@ -54,7 +77,7 @@ const CharInfo = () => {
                     Avengers (1996) #1
                 </li>
             </ul>
-        </div>
+        </>
     )
 }
 

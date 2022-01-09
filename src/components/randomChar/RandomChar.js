@@ -30,6 +30,7 @@ class RandomChar extends React.Component {
             ...this.state,
             isLoading: value
         })
+        console.log(this.state.isLoading);
     }
 
     updateCharacter = async () => {
@@ -103,7 +104,7 @@ class RandomChar extends React.Component {
         return (
             <div className="randomchar">
                 {
-                    loading ?
+                    this.state.isLoading ?
                         <Spinner/> :
                         <View char={char} description={description}/>
                 }
