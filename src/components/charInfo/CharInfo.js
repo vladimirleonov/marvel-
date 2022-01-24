@@ -2,51 +2,95 @@ import React from "react";
 import './charInfo.scss';
 import Skeleton from "../skeleton/Skeleton";
 import thor from '../../resources/img/thor.jpeg';
+import MarvelService from "../../services/MarvelService";
+import Spinner from "../spinner/Spinner";
 
 class CharInfo extends React.Component {
+    constructor(props) {
+        super(props);
+        this.state = ({
+            isLoading: false,
+            char: null
+        })
+    }
 
-    componentDidMount() {
-        if(this.props.activeChar) {
+    marvelService = new MarvelService();
 
+    async componentDidUpdate(prevProps, prevState) {
+        if(this.props.activeChar != prevProps.activeChar) {
+            this.toggleIsLoading(true);
+            const char = await this.marvelService.getCharacter(this.props.activeChar);
+            console.log(char);
+            this.setState({
+                ...this.state,
+                char: {...char}
+            })
+            this.toggleIsLoading(false);
         }
     }
 
+    toggleIsLoading(value) {
+        this.setState({
+            ...this.state,
+            isLoading: value
+        })
+    }
+
     render () {
-        const {activeChar} = this.props;
-        console.log(activeChar);
+        const {char, isLoading} = this.state;
+
+        console.log(this.props.activeChar);
+        console.log(this.state.char);
+        const skeleton = !char && !isLoading ? <Skeleton/> : null;
+        const loading = isLoading ? <Spinner/> : null;
+        const view = !isLoading && char ? <View char={char}/> : null;
+
         return (
             <div className="char__info">
-                {!activeChar ?
-                    <Skeleton/> :
-                    <View/>}
+                {skeleton}
+                {loading}
+                {view}
             </div>
         )
     }
 }
 
-const View = () =>  {
+const View = ({char}) =>  {
+    const {name, thumbnail, description, homepage, wiki, comics} = char;
+
     return (
         <>
             <div className="char__basics">
-                <img src={thor} alt="abyss"/>
+                <img src={thumbnail} alt={name}/>
                 <div>
-                    <div className="char__info-name">thor</div>
+                    <div className="char__info-name">{name}</div>
                     <div className="char__btns">
-                        <a href="#" className="button button__main">
+                        <a href={homepage} className="button button__main">
                             <div className="inner">homepage</div>
                         </a>
-                        <a href="#" className="button button__secondary">
+                        <a href={wiki} className="button button__secondary">
                             <div className="inner">Wiki</div>
                         </a>
                     </div>
                 </div>
             </div>
             <div className="char__descr">
-                In Norse mythology, Loki is a god or jötunn (or both). Loki is the son of Fárbauti and Laufey, and the brother of Helblindi and Býleistr. By the jötunn Angrboða, Loki is the father of Hel, the wolf Fenrir, and the world serpent Jörmungandr. By Sigyn, Loki is the father of Nari and/or Narfi and with the stallion Svaðilfari as the father, Loki gave birth—in the form of a mare—to the eight-legged horse Sleipnir. In addition, Loki is referred to as the father of Váli in the Prose Edda.
+                {description ? description : 'There is no description'}
             </div>
             <div className="char__comics">Comics:</div>
             <ul className="char__comics-list">
-                <li className="char__comics-item">
+                {
+                    comics.length != 0 ?
+                        comics.map(item =>
+                        <li key={item.name} className="char__comics-item">
+                            <a href={item.resourceURI} alt={item.name}>
+                                {item.name}
+                            </a>
+                        </li>)
+                        :
+                        'There is no comics'
+                }
+                {/*<li className="char__comics-item">
                     All-Winners Squad: Band of Heroes (2011) #3
                 </li>
                 <li className="char__comics-item">
@@ -75,7 +119,7 @@ const View = () =>  {
                 </li>
                 <li className="char__comics-item">
                     Avengers (1996) #1
-                </li>
+                </li>*/}
             </ul>
         </>
     )

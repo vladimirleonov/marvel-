@@ -37,6 +37,7 @@ class CharList extends React.Component{
     }
 
     setActiveChar(id) {
+        console.log(id);
         this.props.setActiveChar(id);
     }
 
@@ -45,7 +46,7 @@ class CharList extends React.Component{
             <div className="char__list">
                 <ul className="char__grid">
                     {this.state.chars.map(item =>
-                    <li className="char__item" onClick={() => this.setActiveChar(item.id)}>
+                    <li key={item.id} className="char__item" onClick={() => this.setActiveChar(item.id)}>
                         <img src={item.thumbnail} alt="abyss"/>
                         <div className="char__name">{item.name}</div>
                     </li>
