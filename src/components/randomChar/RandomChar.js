@@ -58,7 +58,7 @@ class RandomChar extends React.Component {
             this.toggleIsLoading(false);
         }
         catch(err) {
-            console.log(err);
+            /*console.log(err);*/
             this.onError();
         }
     }
