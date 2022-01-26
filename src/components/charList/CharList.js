@@ -8,25 +8,41 @@ import './charList.scss';
 class CharList extends React.Component{
     constructor(props) {
         super(props);
+        /*this.foo.info = 0;*/
         this.state = ({
             chars: [],
-            isLoading: false
+            isLoading: false,
+            isError: false
         })
     }
 
     marvelService = new MarvelService();
 
     async componentDidMount() {
-        this.toggleIsLoading(true);
-        const chars = await this.marvelService.getCharacters();
-        console.log(chars);
+        try {
+            this.toggleIsLoading(true);
+            const chars = await this.marvelService.getCharacters();
+            console.log(chars);
+            this.setState({
+                ...this.state,
+                chars: [
+                    ...chars
+                ]
+            });
+            this.toggleIsLoading(false);
+        }
+        catch(err) {
+            console.log(err);
+            this.onError();
+        }
+    }
+
+    onError = () => {
         this.setState({
             ...this.state,
-            chars: [
-                ...chars
-            ]
-        });
-        this.toggleIsLoading(false);
+            isLoading: false,
+            isError: true
+        })
     }
 
     toggleIsLoading(value) {

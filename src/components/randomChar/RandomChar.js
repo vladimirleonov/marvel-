@@ -7,6 +7,7 @@ import Spinner from "../spinner/Spinner";
 class RandomChar extends React.Component {
     constructor(props) {
         super(props);
+        /*this.foo.info = 0;*/
         this.state=({
             char: {
                 name: null,
@@ -15,7 +16,8 @@ class RandomChar extends React.Component {
                 homepage: null,
                 wiki: null
             },
-            isLoading: false
+            isLoading: false,
+            isError: false
         })
     }
 
@@ -31,6 +33,14 @@ class RandomChar extends React.Component {
             isLoading: value
         })
         console.log(this.state.isLoading);
+    }
+
+    onError = () => {
+        this.setState({
+            ...this.state,
+            isLoading: false,
+            isError: true
+        })
     }
 
     updateCharacter = async () => {
@@ -49,6 +59,7 @@ class RandomChar extends React.Component {
         }
         catch(err) {
             console.log(err);
+            this.onError();
         }
     }
 

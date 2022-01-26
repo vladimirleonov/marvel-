@@ -8,25 +8,41 @@ import Spinner from "../spinner/Spinner";
 class CharInfo extends React.Component {
     constructor(props) {
         super(props);
+        /*this.foo.info = 0;*/
         this.state = ({
             isLoading: false,
-            char: null
+            char: null,
+            isError: false
         })
     }
 
     marvelService = new MarvelService();
 
     async componentDidUpdate(prevProps, prevState) {
-        if(this.props.activeChar != prevProps.activeChar) {
-            this.toggleIsLoading(true);
-            const char = await this.marvelService.getCharacter(this.props.activeChar);
-            console.log(char);
-            this.setState({
-                ...this.state,
-                char: {...char}
-            })
-            this.toggleIsLoading(false);
+        try {
+            if(this.props.activeChar != prevProps.activeChar) {
+                this.toggleIsLoading(true);
+                const char = await this.marvelService.getCharacter(this.props.activeChar);
+                console.log(char);
+                this.setState({
+                    ...this.state,
+                    char: {...char}
+                })
+                this.toggleIsLoading(false);
+            }
         }
+        catch(err) {
+            console.log(err);
+            this.onError();
+        }
+    }
+
+    onError = () => {
+        this.setState({
+            ...this.state,
+            isLoading: false,
+            isError: true
+        })
     }
 
     toggleIsLoading(value) {
