@@ -1,4 +1,5 @@
 import React from "react";
+import PropTypes from 'prop-types';
 
 import MarvelService from "../../services/MarvelService";
 import Spinner from "../spinner/Spinner";
@@ -75,6 +76,10 @@ class CharList extends React.Component{
             </div>
         )
     }
+}
+
+CharList.propTypes = {
+    setActiveChar: PropTypes.func
 }
 
 export default CharList;

@@ -4,6 +4,7 @@ import Skeleton from "../skeleton/Skeleton";
 import thor from '../../resources/img/thor.jpeg';
 import MarvelService from "../../services/MarvelService";
 import Spinner from "../spinner/Spinner";
+import PropTypes from "prop-types";
 
 class CharInfo extends React.Component {
     constructor(props) {
@@ -147,6 +148,10 @@ const View = ({char}) =>  {
             </ul>
         </>
     )
+}
+
+CharInfo.propTypes = {
+    activeChar: PropTypes.number
 }
 
 export default CharInfo;
