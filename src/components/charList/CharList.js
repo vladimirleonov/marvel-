@@ -13,29 +13,54 @@ class CharList extends React.Component{
         this.state = ({
             chars: [],
             isLoading: false,
-            isError: false
+            isError: false,
+            offset: 1541,
+            isActiveLoadMoreBtn: true,
+            charsEnded: false
         })
     }
 
     marvelService = new MarvelService();
 
-    async componentDidMount() {
+    componentDidMount() {
+        this.onUpdateChars();
+    }
+
+    onUpdateChars = async (offset) => {
         try {
-            this.toggleIsLoading(true);
-            const chars = await this.marvelService.getCharacters();
+            this.onToggleIsLoading(true);
+            this.onToggleIsActiveLoadMoreBtn(false);
+            const chars = await this.marvelService.getCharacters(offset);
             console.log(chars);
-            this.setState({
-                ...this.state,
-                chars: [
-                    ...chars
-                ]
-            });
-            this.toggleIsLoading(false);
+            this.onCharsLoaded(chars)
+            this.onToggleIsLoading(false);
+            this.onToggleIsActiveLoadMoreBtn(true);
         }
         catch(err) {
             console.log(err);
             this.onError();
         }
+    }
+
+    onCharsLoaded = (chars) => {
+        let ended = false;
+        if(chars.length < 9) {
+            ended = true;
+        }
+        this.setState({
+            ...this.state,
+            chars: [
+                ...this.state.chars,
+                ...chars,
+            ],
+            offset: this.state.offset + 9,
+            charsEnded: ended
+        });
+    }
+
+    onUploadChars = () => {
+        console.log('upload');
+        this.onUpdateChars(this.state.offset);
     }
 
     onError = () => {
@@ -46,31 +71,46 @@ class CharList extends React.Component{
         })
     }
 
-    toggleIsLoading(value) {
+    onToggleIsActiveLoadMoreBtn = (value) => {
+        this.setState({
+            ...this.state,
+            isActiveLoadMoreBtn: value
+        })
+    }
+
+    onToggleIsLoading(value) {
         this.setState({
             ...this.state,
             isLoading: value
         })
     }
 
-    setActiveChar(id) {
+    onSetActiveChar(id) {
         console.log(id);
         this.props.setActiveChar(id);
     }
 
     render () {
+
+        const {chars, charsEnded, isActiveLoadMoreBtn} = this.state;
+
         return (
             <div className="char__list">
                 <ul className="char__grid">
-                    {this.state.chars.map(item =>
-                    <li key={item.id} className="char__item" onClick={() => this.setActiveChar(item.id)}>
+                    {chars.map(item =>
+                    <li key={item.id} className="char__item" onClick={() => this.onSetActiveChar(item.id)}>
                         <img src={item.thumbnail} alt="abyss"/>
                         <div className="char__name">{item.name}</div>
                     </li>
                     )}
                     {/*className="char__item char__item_selected*/}
                 </ul>
-                <button className="button button__main button__long">
+                <button
+                    className="button button__main button__long"
+                    style={{'display': charsEnded ? 'none' : 'block' }}
+                    disabled={!isActiveLoadMoreBtn}
+                    onClick={this.onUploadChars}
+                >
                     <div className="inner">load more</div>
                 </button>
             </div>
