@@ -24,7 +24,7 @@ class CharInfo extends React.Component {
             if(this.props.activeChar != prevProps.activeChar) {
                 this.toggleIsLoading(true);
                 const char = await this.marvelService.getCharacter(this.props.activeChar);
-                console.log(char);
+                /*console.log(char);*/
                 this.setState({
                     ...this.state,
                     char: {...char}
@@ -33,7 +33,7 @@ class CharInfo extends React.Component {
             }
         }
         catch(err) {
-            console.log(err);
+            /*console.log(err);*/
             this.onError();
         }
     }
@@ -56,8 +56,8 @@ class CharInfo extends React.Component {
     render () {
         const {char, isLoading} = this.state;
 
-        console.log(this.props.activeChar);
-        console.log(this.state.char);
+        /*console.log(this.props.activeChar);*/
+        /*console.log(this.state.char);*/
         const skeleton = !char && !isLoading ? <Skeleton/> : null;
         const loading = isLoading ? <Spinner/> : null;
         const view = !isLoading && char ? <View char={char}/> : null;

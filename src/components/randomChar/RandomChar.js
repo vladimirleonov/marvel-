@@ -32,7 +32,7 @@ class RandomChar extends React.Component {
             ...this.state,
             isLoading: value
         })
-        console.log(this.state.isLoading);
+        /*console.log(this.state.isLoading);*/
     }
 
     onError = () => {

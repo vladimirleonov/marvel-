@@ -14,10 +14,11 @@ class CharList extends React.Component{
             chars: [],
             isLoading: false,
             isError: false,
-            offset: 1541,
+            offset: 210,
             isActiveLoadMoreBtn: true,
             charsEnded: false
         })
+        console.log('constructor');
     }
 
     marvelService = new MarvelService();
@@ -90,15 +91,36 @@ class CharList extends React.Component{
         this.props.setActiveChar(id);
     }
 
+    itemRefs = [];
+
+    setCharItemRef = ref => {
+        this.itemRefs.push(ref);
+    }
+
+    focusOnItem(id) {
+        this.itemRefs.forEach(item => item.classList.remove('char__item_selected'));
+        this.itemRefs[id].classList.add('char__item_selected');
+        this.itemRefs[id].focus();
+    }
+
     render () {
 
         const {chars, charsEnded, isActiveLoadMoreBtn} = this.state;
 
+        console.log('render charList');
+
         return (
             <div className="char__list">
                 <ul className="char__grid">
-                    {chars.map(item =>
-                    <li key={item.id} className="char__item" onClick={() => this.onSetActiveChar(item.id)}>
+                    {chars.map((item, i) =>
+                    <li key={item.id}
+                        className="char__item"
+                        onClick={() => {
+                            this.onSetActiveChar(item.id)
+                            this.focusOnItem(i)
+                        }}
+                        ref={this.setCharItemRef}
+                    >
                         <img src={item.thumbnail} alt="abyss"/>
                         <div className="char__name">{item.name}</div>
                     </li>

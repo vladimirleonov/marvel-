@@ -7,7 +7,7 @@ export default class MarvelService {
     }
     getCharacter = async (id) => {
         const response = await this.getResource(`/${id}?apikey=c8f1b9d4937ef1256f1d96898ca20f7e`);
-        /*console.log(response);*/
+        console.log(response);
         return this._transformCharacter(response.data.results[0]);
     }
     getCharacters = async (offset=this._baseOffset) => {
