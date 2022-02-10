@@ -1,75 +1,54 @@
-import React from "react";
+import React, {useEffect, useState} from "react";
 import './charInfo.scss';
 import Skeleton from "../skeleton/Skeleton";
-import thor from '../../resources/img/thor.jpeg';
 import MarvelService from "../../services/MarvelService";
 import Spinner from "../spinner/Spinner";
 import PropTypes from "prop-types";
 
-class CharInfo extends React.Component {
-    constructor(props) {
-        super(props);
-        /*this.foo.info = 0;*/
-        this.state = ({
-            isLoading: false,
-            char: null,
-            isError: false
-        })
-    }
+const CharInfo = ({activeChar}) => {
+    const [char, setChar] = useState(null);
+    const [isLoading, setIsLoading] = useState(false);
+    const [isError, setIsError] = useState(false);
 
-    marvelService = new MarvelService();
+    const marvelService = new MarvelService();
 
-    async componentDidUpdate(prevProps, prevState) {
+    useEffect(() => {
+        getChar();
+    }, [activeChar]);
+
+    const getChar = async () => {
         try {
-            if(this.props.activeChar != prevProps.activeChar) {
-                this.toggleIsLoading(true);
-                const char = await this.marvelService.getCharacter(this.props.activeChar);
-                /*console.log(char);*/
-                this.setState({
-                    ...this.state,
-                    char: {...char}
-                })
-                this.toggleIsLoading(false);
-            }
+            toggleIsLoading(true);
+            const char = await marvelService.getCharacter(activeChar);
+            setChar({...char})
+            toggleIsLoading(false);
         }
         catch(err) {
-            /*console.log(err);*/
-            this.onError();
+            console.log(err);
+            onError();
         }
     }
 
-    onError = () => {
-        this.setState({
-            ...this.state,
-            isLoading: false,
-            isError: true
-        })
+    const onError = () => {
+        setIsLoading(false);
+        setIsError(true);
     }
 
-    toggleIsLoading(value) {
-        this.setState({
-            ...this.state,
-            isLoading: value
-        })
+    const toggleIsLoading = (value) => {
+        setIsLoading(value);
     }
 
-    render () {
-        const {char, isLoading} = this.state;
+    const skeleton = !char && !isLoading ? <Skeleton/> : null;
+    const loading = isLoading ? <Spinner/> : null;
+    const view = !isLoading && char ? <View char={char}/> : null;
 
-        /*console.log(this.props.activeChar);*/
-        /*console.log(this.state.char);*/
-        const skeleton = !char && !isLoading ? <Skeleton/> : null;
-        const loading = isLoading ? <Spinner/> : null;
-        const view = !isLoading && char ? <View char={char}/> : null;
-
-        return (
-            <div className="char__info">
-                {skeleton}
-                {loading}
-                {view}
-            </div>
-        )
-    }
+    return (
+        <div className="char__info">
+            {skeleton}
+            {loading}
+            {view}
+        </div>
+    )
 }
 
 const View = ({char}) =>  {
@@ -115,36 +94,6 @@ const View = ({char}) =>  {
                         :
                         'There is no comics'
                 }
-                {/*<li className="char__comics-item">
-                    All-Winners Squad: Band of Heroes (2011) #3
-                </li>
-                <li className="char__comics-item">
-                    Alpha Flight (1983) #50
-                </li>
-                <li className="char__comics-item">
-                    Amazing Spider-Man (1999) #503
-                </li>
-                <li className="char__comics-item">
-                    Amazing Spider-Man (1999) #504
-                </li>
-                <li className="char__comics-item">
-                    AMAZING SPIDER-MAN VOL. 7: BOOK OF EZEKIEL TPB (Trade Paperback)
-                </li>
-                <li className="char__comics-item">
-                    Amazing-Spider-Man: Worldwide Vol. 8 (Trade Paperback)
-                </li>
-                <li className="char__comics-item">
-                    Asgardians Of The Galaxy Vol. 2: War Of The Realms (Trade Paperback)
-                </li>
-                <li className="char__comics-item">
-                    Vengeance (2011) #4
-                </li>
-                <li className="char__comics-item">
-                    Avengers (1963) #1
-                </li>
-                <li className="char__comics-item">
-                    Avengers (1996) #1
-                </li>*/}
             </ul>
         </>
     )

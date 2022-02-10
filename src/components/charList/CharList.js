@@ -1,15 +1,20 @@
-import React from "react";
+import React, {useEffect, useState} from "react";
 import PropTypes from 'prop-types';
 
 import MarvelService from "../../services/MarvelService";
-import Spinner from "../spinner/Spinner";
 
 import './charList.scss';
 
-class CharList extends React.Component{
-    constructor(props) {
+const CharList = ({setActiveChar}) => {
+    const [chars, setChars] = useState([]);
+    const [isLoading, setIsLoading] = useState(false);
+    const [isError, setIsError] = useState(false);
+    const [offset, setOffset] = useState(210);
+    const [isActiveLoadMoreBtn, setIsActiveLoadMoreBtn] = useState(true);
+    const [charsEnded, setCharsEnded] = useState(false);
+    /*constructor(props) {
         super(props);
-        /*this.foo.info = 0;*/
+        /!*this.foo.info = 0;*!/
         this.state = ({
             chars: [],
             isLoading: false,
@@ -19,36 +24,43 @@ class CharList extends React.Component{
             charsEnded: false
         })
         console.log('constructor');
-    }
+    }*/
 
-    marvelService = new MarvelService();
+    const marvelService = new MarvelService();
 
-    componentDidMount() {
-        this.onUpdateChars();
-    }
+    useEffect(() => {
+        onUpdateChars();
+    }, [])
 
-    onUpdateChars = async (offset) => {
+    /*const componentDidMount = () => {
+        onUpdateChars();
+    }*/
+
+    const onUpdateChars = async (offset) => {
         try {
-            this.onToggleIsLoading(true);
-            this.onToggleIsActiveLoadMoreBtn(false);
-            const chars = await this.marvelService.getCharacters(offset);
+            onToggleIsLoading(true);
+            onToggleIsActiveLoadMoreBtn(false);
+            const chars = await marvelService.getCharacters(offset);
             console.log(chars);
-            this.onCharsLoaded(chars)
-            this.onToggleIsLoading(false);
-            this.onToggleIsActiveLoadMoreBtn(true);
+            onCharsLoaded(chars)
+            onToggleIsLoading(false);
+            onToggleIsActiveLoadMoreBtn(true);
         }
         catch(err) {
             console.log(err);
-            this.onError();
+            onError();
         }
     }
 
-    onCharsLoaded = (chars) => {
+    const onCharsLoaded = (newChars) => {
         let ended = false;
         if(chars.length < 9) {
             ended = true;
         }
-        this.setState({
+        setChars([...chars, ...newChars]);
+        setOffset(offset + 9);
+        setCharsEnded(ended);
+        /*this.setState({
             ...this.state,
             chars: [
                 ...this.state.chars,
@@ -56,88 +68,88 @@ class CharList extends React.Component{
             ],
             offset: this.state.offset + 9,
             charsEnded: ended
-        });
+        });*/
     }
 
-    onUploadChars = () => {
+    const onUploadChars = () => {
         console.log('upload');
-        this.onUpdateChars(this.state.offset);
+        onUpdateChars(offset);
     }
 
-    onError = () => {
-        this.setState({
+    const onError = () => {
+        setIsLoading(false);
+        setIsError(true);
+        /*this.setState({
             ...this.state,
             isLoading: false,
             isError: true
-        })
+        })*/
     }
 
-    onToggleIsActiveLoadMoreBtn = (value) => {
-        this.setState({
+    const onToggleIsActiveLoadMoreBtn = (value) => {
+        setIsActiveLoadMoreBtn(value);
+        /*this.setState({
             ...this.state,
             isActiveLoadMoreBtn: value
-        })
+        })*/
     }
 
-    onToggleIsLoading(value) {
-        this.setState({
+    const onToggleIsLoading = (value) => {
+        setIsLoading(value);
+        /*this.setState({
             ...this.state,
             isLoading: value
-        })
+        })*/
     }
 
-    onSetActiveChar(id) {
+    const onSetActiveChar = (id) => {
         console.log(id);
-        this.props.setActiveChar(id);
+        setActiveChar(id);
     }
 
-    itemRefs = [];
+    const itemRefs = [];
 
-    setCharItemRef = ref => {
-        this.itemRefs.push(ref);
+    const setCharItemRef = ref => {
+        itemRefs.push(ref);
     }
 
-    focusOnItem(id) {
-        this.itemRefs.forEach(item => item.classList.remove('char__item_selected'));
-        this.itemRefs[id].classList.add('char__item_selected');
-        this.itemRefs[id].focus();
+    const focusOnItem = (id) => {
+        itemRefs.forEach(item => item.classList.remove('char__item_selected'));
+        itemRefs[id].classList.add('char__item_selected');
+        itemRefs[id].focus();
     }
 
-    render () {
-
-        const {chars, charsEnded, isActiveLoadMoreBtn} = this.state;
-
-        console.log('render charList');
-
-        return (
-            <div className="char__list">
-                <ul className="char__grid">
-                    {chars.map((item, i) =>
-                    <li key={item.id}
-                        className="char__item"
-                        onClick={() => {
-                            this.onSetActiveChar(item.id)
-                            this.focusOnItem(i)
-                        }}
-                        ref={this.setCharItemRef}
-                    >
-                        <img src={item.thumbnail} alt="abyss"/>
-                        <div className="char__name">{item.name}</div>
-                    </li>
-                    )}
-                    {/*className="char__item char__item_selected*/}
-                </ul>
-                <button
-                    className="button button__main button__long"
-                    style={{'display': charsEnded ? 'none' : 'block' }}
-                    disabled={!isActiveLoadMoreBtn}
-                    onClick={this.onUploadChars}
+    console.log('render charList');
+    console.log(chars)
+    debugger;
+    return (
+        <div className="char__list">
+            <ul className="char__grid">
+                {chars.map((item, i) =>
+                <li key={item.id}
+                    className="char__item"
+                    onClick={() => {
+                        onSetActiveChar(item.id)
+                        focusOnItem(i)
+                    }}
+                    ref={setCharItemRef}
                 >
-                    <div className="inner">load more</div>
-                </button>
-            </div>
-        )
-    }
+                    <img src={item.thumbnail} alt="abyss"/>
+                    <div className="char__name">{item.name}</div>
+                </li>
+                )}
+                {/*className="char__item char__item_selected*/}
+            </ul>
+            <button
+                className="button button__main button__long"
+                style={{'display': charsEnded ? 'none' : 'block' }}
+                disabled={!isActiveLoadMoreBtn}
+                onClick={onUploadChars}
+            >
+                <div className="inner">load more</div>
+            </button>
+        </div>
+    )
 }
 
 CharList.propTypes = {
