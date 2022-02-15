@@ -1,4 +1,4 @@
-import React, {useEffect, useState} from "react";
+import React, {useEffect, useRef, useState} from "react";
 import PropTypes from 'prop-types';
 
 import MarvelService from "../../services/MarvelService";
@@ -42,7 +42,7 @@ const CharList = ({setActiveChar}) => {
             onToggleIsActiveLoadMoreBtn(false);
             const chars = await marvelService.getCharacters(offset);
             console.log(chars);
-            onCharsLoaded(chars)
+            onCharsLoaded(chars);
             onToggleIsLoading(false);
             onToggleIsActiveLoadMoreBtn(true);
         }
@@ -54,7 +54,8 @@ const CharList = ({setActiveChar}) => {
 
     const onCharsLoaded = (newChars) => {
         let ended = false;
-        if(chars.length < 9) {
+        if(newChars.length < 9) {
+            debugger;
             ended = true;
         }
         setChars([...chars, ...newChars]);
@@ -107,20 +108,18 @@ const CharList = ({setActiveChar}) => {
         setActiveChar(id);
     }
 
-    const itemRefs = [];
-
-    const setCharItemRef = ref => {
-        itemRefs.push(ref);
-    }
+    const itemRef = useRef([]);
+    console.log(itemRef);
 
     const focusOnItem = (id) => {
-        itemRefs.forEach(item => item.classList.remove('char__item_selected'));
-        itemRefs[id].classList.add('char__item_selected');
-        itemRefs[id].focus();
+        itemRef.current.forEach(item => item.classList.remove('char__item_selected'));
+        itemRef.current[id].classList.add('char__item_selected');
+        itemRef.current[id].focus();
     }
 
-    console.log('render charList');
-    console.log(chars)
+    // console.log('render charList');
+    console.log(charsEnded);
+    console.log(chars.length);
     debugger;
     return (
         <div className="char__list">
@@ -128,11 +127,11 @@ const CharList = ({setActiveChar}) => {
                 {chars.map((item, i) =>
                 <li key={item.id}
                     className="char__item"
+                    ref={el => itemRef.current[i] = el}
                     onClick={() => {
                         onSetActiveChar(item.id)
                         focusOnItem(i)
                     }}
-                    ref={setCharItemRef}
                 >
                     <img src={item.thumbnail} alt="abyss"/>
                     <div className="char__name">{item.name}</div>
