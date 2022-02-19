@@ -19,6 +19,7 @@ const CharList = ({setActiveChar}) => {
         requestChars();
     }, [])
 
+
     const requestChars = async (offset) => {
         onToggleIsActiveLoadMoreBtn(false);
         const chars = await getCharacters(offset);
