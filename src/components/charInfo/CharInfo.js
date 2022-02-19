@@ -4,48 +4,29 @@ import Skeleton from "../skeleton/Skeleton";
 import MarvelService from "../../services/MarvelService";
 import Spinner from "../spinner/Spinner";
 import PropTypes from "prop-types";
+import useMarvelService from "../../services/MarvelService";
 
 const CharInfo = ({activeChar}) => {
     const [char, setChar] = useState(null);
-    const [isLoading, setIsLoading] = useState(false);
-    const [isError, setIsError] = useState(false);
-
-    const marvelService = new MarvelService();
+    const {loading, error, getCharacter} = useMarvelService();
 
     useEffect(() => {
         getChar();
     }, [activeChar]);
 
     const getChar = async () => {
-        try {
-            toggleIsLoading(true);
-            const char = await marvelService.getCharacter(activeChar);
-            setChar({...char})
-            toggleIsLoading(false);
-        }
-        catch(err) {
-            console.log(err);
-            onError();
-        }
+        const char = await getCharacter(activeChar);
+        setChar({...char})
     }
 
-    const onError = () => {
-        setIsLoading(false);
-        setIsError(true);
-    }
-
-    const toggleIsLoading = (value) => {
-        setIsLoading(value);
-    }
-
-    const skeleton = !char && !isLoading ? <Skeleton/> : null;
-    const loading = isLoading ? <Spinner/> : null;
-    const view = !isLoading && char ? <View char={char}/> : null;
+    const skeleton = !char && !loading ? <Skeleton/> : null;
+    const isLoading = loading ? <Spinner/> : null;
+    const view = !loading && char ? <View char={char}/> : null;
 
     return (
         <div className="char__info">
             {skeleton}
-            {loading}
+            {isLoading}
             {view}
         </div>
     )

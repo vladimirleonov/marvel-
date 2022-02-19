@@ -3,6 +3,7 @@ import './randomChar.scss';
 import mjolnir from '../../resources/img/mjolnir.png';
 import MarvelService from "../../services/MarvelService";
 import Spinner from "../spinner/Spinner";
+import useMarvelService from "../../services/MarvelService";
 
 const RandomChar = () => {
 
@@ -13,35 +14,16 @@ const RandomChar = () => {
         homepage: null,
         wiki: null
     });
-    const [isLoading, setIsLoading] = useState(false);
-    const [isError, setIsError] = useState(false);
-
-    const marvelService = new MarvelService();
+    const {loading, getCharacter} = useMarvelService();
 
     useEffect(() => {
         updateCharacter();
     }, []);
 
-    const toggleIsLoading = (value) => {
-        setIsLoading(value);
-    }
-
-    const onError = () => {
-        setIsLoading(false);
-        setIsError(true);
-    }
-
     const updateCharacter = async () => {
-        try {
-            toggleIsLoading(true);
-            let id = Math.floor(Math.random() * (1011400 - 1011000) + 1011000);
-            const char = await marvelService.getCharacter(id);
-            setChar({...char});
-            toggleIsLoading(false);
-        }
-        catch(err) {
-            onError();
-        }
+        let id = Math.floor(Math.random() * (1011400 - 1011000) + 1011000);
+        const char = await getCharacter(id);
+        setChar({...char});
     }
 
     const getTotalWordsCount = (str) => {
@@ -92,7 +74,7 @@ const RandomChar = () => {
     return (
         <div className="randomchar">
             {
-                isLoading ?
+                loading ?
                     <Spinner/> :
                     <View char={char} description={description}/>
             }

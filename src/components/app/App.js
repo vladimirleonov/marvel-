@@ -28,9 +28,9 @@ const App = () => {
                     <ErrorBoundary>
                         <CharList setActiveChar={onSetActiveChar}/>
                     </ErrorBoundary>
-                    <ErrorBoundary>
+                    {/*<ErrorBoundary>
                         <CharInfo activeChar={activeChar}/>
-                    </ErrorBoundary>
+                    </ErrorBoundary>*/}
                 </div>
                 <img className="bg-decoration" src={decoration} alt="vision"/>
             </main>
