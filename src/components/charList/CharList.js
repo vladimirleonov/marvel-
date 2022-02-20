@@ -16,12 +16,12 @@ const CharList = ({setActiveChar}) => {
     const {loading, error, getCharacters} = useMarvelService();
 
     useEffect(() => {
-        requestChars();
+        requestChars(offset, true);
     }, [])
 
 
-    const requestChars = async (offset) => {
-        onToggleIsActiveLoadMoreBtn(false);
+    const requestChars = async (offset, initial) => {
+        initial ? onToggleIsActiveLoadMoreBtn(true) : onToggleIsActiveLoadMoreBtn(false);
         const chars = await getCharacters(offset);
         console.log(chars);
         onCharsLoaded(chars);
@@ -41,7 +41,7 @@ const CharList = ({setActiveChar}) => {
 
     const onUploadChars = () => {
         console.log('upload');
-        requestChars(offset);
+        requestChars(offset, false);
     }
 
     const onToggleIsActiveLoadMoreBtn = (value) => {
@@ -68,7 +68,7 @@ const CharList = ({setActiveChar}) => {
     debugger;
     return (
         <div className="char__list">
-            {loading ?
+            {loading && isActiveLoadMoreBtn ?
                 <Spinner/> :
                 <ul className="char__grid">
                     {chars.map((item, i) =>
