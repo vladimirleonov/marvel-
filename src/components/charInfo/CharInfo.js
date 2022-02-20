@@ -5,6 +5,7 @@ import MarvelService from "../../services/MarvelService";
 import Spinner from "../spinner/Spinner";
 import PropTypes from "prop-types";
 import useMarvelService from "../../services/MarvelService";
+import ErrorMessage from "../errorMessage/ErrorMessage";
 
 const CharInfo = ({activeChar}) => {
     const [char, setChar] = useState(null);
@@ -15,19 +16,24 @@ const CharInfo = ({activeChar}) => {
     }, [activeChar]);
 
     const getChar = async () => {
+        if(!activeChar) {
+            return
+        }
         const char = await getCharacter(activeChar);
         setChar({...char})
     }
 
-    const skeleton = !char && !loading ? <Skeleton/> : null;
-    const isLoading = loading ? <Spinner/> : null;
-    const view = !loading && char ? <View char={char}/> : null;
+    const spinner = loading ? <Spinner/> : null;
+    const errorMessage = error ? <ErrorMessage/> : null;
+    const skeleton = !char && !loading && !error ? <Skeleton/> : null;
+    const content = !loading && char && !error ? <View char={char}/> : null;
 
     return (
         <div className="char__info">
             {skeleton}
-            {isLoading}
-            {view}
+            {spinner}
+            {errorMessage}
+            {content}
         </div>
     )
 }

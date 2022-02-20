@@ -5,7 +5,7 @@ class ErrorMessage extends React.Component{
     render() {
         return (
             <img style={{display: 'block', width: '250px', height: '250px',
-                objectFit: 'contain', margin: '0 auto'}} src={img}/>
+                objectFit: 'contain', margin: '0 auto', verticalAlign: 'middle'}} src={img}/>
         )
     }
 }

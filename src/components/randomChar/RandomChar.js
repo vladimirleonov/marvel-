@@ -4,6 +4,7 @@ import mjolnir from '../../resources/img/mjolnir.png';
 import MarvelService from "../../services/MarvelService";
 import Spinner from "../spinner/Spinner";
 import useMarvelService from "../../services/MarvelService";
+import ErrorMessage from "../errorMessage/ErrorMessage";
 
 const RandomChar = () => {
 
@@ -14,7 +15,7 @@ const RandomChar = () => {
         homepage: null,
         wiki: null
     });
-    const {loading, getCharacter} = useMarvelService();
+    const {loading, error, getCharacter} = useMarvelService();
 
     useEffect(() => {
         updateCharacter();
@@ -71,13 +72,16 @@ const RandomChar = () => {
         description = char.description
     }
 
+    const errorMessage = error ? <ErrorMessage/> : null;
+    const spinner = loading ? <Spinner/> : null;
+    const content = (!error && !loading) ?
+        <View char={char} description={description}/> : null;
+
     return (
         <div className="randomchar">
-            {
-                loading ?
-                    <Spinner/> :
-                    <View char={char} description={description}/>
-            }
+            {errorMessage}
+            {spinner}
+            {content}
             <div className="randomchar__static">
                 <p className="randomchar__title">
                     Random character for today!<br/>

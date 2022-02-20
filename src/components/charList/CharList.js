@@ -6,6 +6,7 @@ import MarvelService from "../../services/MarvelService";
 import './charList.scss';
 import useMarvelService from "../../services/MarvelService";
 import Spinner from "../spinner/Spinner";
+import ErrorMessage from "../errorMessage/ErrorMessage";
 
 const CharList = ({setActiveChar}) => {
     const [chars, setChars] = useState([]);
@@ -62,14 +63,19 @@ const CharList = ({setActiveChar}) => {
         itemRef.current[id].focus();
     }
 
+    const spinner = loading && isActiveLoadMoreBtn ? <Spinner/> : null;
+    const errorMessage = error ? <ErrorMessage/> : null;
+
     // console.log('render charList');
     console.log(charsEnded);
     console.log(chars.length);
     debugger;
     return (
         <div className="char__list">
-            {loading && isActiveLoadMoreBtn ?
-                <Spinner/> :
+            {errorMessage}
+            {spinner}
+            {
+                !errorMessage && !spinner &&
                 <ul className="char__grid">
                     {chars.map((item, i) =>
                         <li key={item.id}
