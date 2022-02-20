@@ -15,13 +15,14 @@ const RandomChar = () => {
         homepage: null,
         wiki: null
     });
-    const {loading, error, getCharacter} = useMarvelService();
+    const {loading, error, clearError, getCharacter} = useMarvelService();
 
     useEffect(() => {
         updateCharacter();
     }, []);
 
     const updateCharacter = async () => {
+        clearError();
         let id = Math.floor(Math.random() * (1011400 - 1011000) + 1011000);
         const char = await getCharacter(id);
         setChar({...char});
@@ -73,7 +74,7 @@ const RandomChar = () => {
     }
 
     const errorMessage = error ? <ErrorMessage/> : null;
-    const spinner = loading ? <Spinner/> : null;
+    const spinner = loading && !error ? <Spinner/> : null;
     const content = (!error && !loading) ?
         <View char={char} description={description}/> : null;
 

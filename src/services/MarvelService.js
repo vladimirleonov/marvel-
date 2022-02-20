@@ -1,7 +1,7 @@
 import useHttp from "../components/hooks/http.hook";
 
 const useMarvelService = () => {
-    const {loading, request, error} = useHttp();
+    const {loading, request, error, clearError} = useHttp();
 
     const _baseUrl = 'https://gateway.marvel.com:443/v1/public/characters';
     const _baseOffset = 210;
@@ -28,7 +28,9 @@ const useMarvelService = () => {
         }
     }
 
-    return {loading, error, getCharacter, getCharacters}
+    return {loading, error, clearError, getCharacter, getCharacters}
 }
 
 export default useMarvelService;
+
+//char 1011049 - error
