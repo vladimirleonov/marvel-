@@ -14,7 +14,7 @@ const CharList = ({setActiveChar}) => {
     const [isActiveLoadMoreBtn, setIsActiveLoadMoreBtn] = useState(true);
     const [charsEnded, setCharsEnded] = useState(false);
 
-    const {loading, error, getCharacters} = useMarvelService();
+    const {loading, error, clearError, getCharacters} = useMarvelService();
 
     useEffect(() => {
         requestChars(offset, true);
@@ -50,6 +50,7 @@ const CharList = ({setActiveChar}) => {
     }
 
     const onSetActiveChar = (id) => {
+        clearError();
         console.log(id);
         setActiveChar(id);
     }
