@@ -83,6 +83,7 @@ const ComicsList = () => {
                 <div className="inner">load more</div>
             </button>
         </div>
+
     )
 }
 
