@@ -17,6 +17,7 @@ const ComicsList = () => {
 
     console.log(offset);
 
+
     useEffect(() => {
         requestComics(offset, true)
     }, []);
