@@ -95,10 +95,10 @@ const CharList = ({setActiveChar}) => {
                 </ul>
             }
                 <button
-                className="button button__main button__long"
-                style={{'display': charsEnded ? 'none' : 'block'}}
-                disabled={!isActiveLoadMoreBtn}
-                onClick={onUploadChars}
+                    className="button button__main button__long"
+                    style={{'display': charsEnded ? 'none' : 'block'}}
+                    disabled={!isActiveLoadMoreBtn}
+                    onClick={onUploadChars}
                 >
                 <div className="inner">load more</div>
                 </button>
