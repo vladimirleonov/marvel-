@@ -1,4 +1,9 @@
 import React, {useState} from "react";
+import {
+    BrowserRouter,
+    Routes,
+    Route,
+} from "react-router-dom";
 
 import AppHeader from "../appHeader/AppHeader";
 import RandomChar from "../randomChar/RandomChar";
@@ -12,33 +17,54 @@ import ComicsList from "../comicsList/ComicsList";
 
 const App = () => {
 
+    return (
+        <BrowserRouter>
+            <div className="app">
+                <AppHeader/>
+                <main>
+                    <Routes>
+                        <Route path="/" element={<Characters/>}/>
+                        <Route path="/characters" element={<Characters/>}/>
+                        <Route path="/comics" element={<Comics/>}/>
+                    </Routes>
+                </main>
+            </div>
+        </BrowserRouter>
+    )
+}
+
+const Characters = () => {
+
     const [activeChar, setActiveChar] = useState(null);
 
     const onSetActiveChar = (id) => {
         setActiveChar(id)
     }
 
-    console.log(activeChar);
     return (
-        <div className="app">
-            <AppHeader/>
-            <main>
-                {/*<ErrorBoundary>
-                    <RandomChar/>
+        <>
+            <ErrorBoundary>
+                <RandomChar/>
+            </ErrorBoundary>
+            <div className="char__content">
+                <ErrorBoundary>
+                    <CharList setActiveChar={onSetActiveChar}/>
                 </ErrorBoundary>
-                <div className="char__content">
-                    <ErrorBoundary>
-                        <CharList setActiveChar={onSetActiveChar}/>
-                    </ErrorBoundary>
-                    <ErrorBoundary>
-                        <CharInfo activeChar={activeChar}/>
-                    </ErrorBoundary>
-                </div>
-                <img className="bg-decoration" src={decoration} alt="vision"/>*/}
-                <AppBanner/>
-                <ComicsList/>
-            </main>
-        </div>
+                <ErrorBoundary>
+                    <CharInfo activeChar={activeChar}/>
+                </ErrorBoundary>
+            </div>
+            <img className="bg-decoration" src={decoration} alt="vision"/>
+        </>
+    )
+}
+
+const Comics = () => {
+    return (
+        <>
+            <AppBanner/>
+            <ComicsList/>
+        </>
     )
 }
 
