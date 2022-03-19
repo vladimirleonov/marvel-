@@ -68,9 +68,9 @@ const CharList = ({setActiveChar}) => {
     const errorMessage = error ? <ErrorMessage/> : null;
 
     // console.log('render charList');
-    console.log(charsEnded);
+    /*console.log(charsEnded);
     console.log(chars.length);
-    debugger;
+    debugger;*/
     return (
         <div className="char__list">
             {errorMessage}

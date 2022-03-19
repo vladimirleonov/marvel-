@@ -5,6 +5,7 @@ import React, {useEffect, useState} from "react";
 import useMarvelService from "../../services/MarvelService";
 import Spinner from "../spinner/Spinner";
 import ErrorMessage from "../errorMessage/ErrorMessage";
+import {Link} from "react-router-dom";
 
 const ComicsList = () => {
 
@@ -48,9 +49,9 @@ const ComicsList = () => {
     const spinner = loading && isActiveLoadMoreBtn ? <Spinner/> : null;
     const errorMessage = error ? <ErrorMessage/> : null;
 
-    console.log(comics);
+    /*console.log(comics);
     console.log(comicsEnded);
-    debugger;
+    debugger;*/
 
     return (
         <div className="comics__list">
@@ -58,12 +59,12 @@ const ComicsList = () => {
             {errorMessage}
             <ul className="comics__grid">
                 {comics.length > 0 && !errorMessage && !spinner &&
-                    comics.map((comics, index) =>
-                        <a  key={index} href={comics.homepage}>
-                            <img src={comics.image ? comics.image : uw} alt="ultimate war" className="comics__item-img"/>
-                            <div className="comics__item-name">{comics.title}</div>
-                            <div className="comics__item-price">{comics.price}</div>
-                        </a>
+                    comics.map((comic, index) =>
+                        <Link  key={index} to={`/comics/${comic.id}`}>
+                            <img src={comic.image ? comic.image : uw} alt="ultimate war" className="comics__item-img"/>
+                            <div className="comics__item-name">{comic.title}</div>
+                            <div className="comics__item-price">{comic.price}</div>
+                        </Link>
                     )
                 }
                 {/*<li className="comics__item">

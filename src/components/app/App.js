@@ -14,6 +14,7 @@ import decoration from '../../resources/img/vision.png';
 import ErrorBoundary from "../errorBoundary/ErrorBoundary";
 import AppBanner from "../appBanner/AppBanner";
 import ComicsList from "../comicsList/ComicsList";
+import SingleComic from "../singleComic/SingleComic";
 
 const App = () => {
 
@@ -25,7 +26,9 @@ const App = () => {
                     <Routes>
                         <Route path="/" element={<Characters/>}/>
                         <Route path="/characters" element={<Characters/>}/>
-                        <Route path="/comics" element={<Comics/>}/>
+                        <Route path="/comics" element={<Comics/>}>
+                            <Route path=":comicId" element={<SingleComic/>} />
+                        </Route>
                     </Routes>
                 </main>
             </div>
