@@ -24,7 +24,6 @@ const CharList = ({setActiveChar}) => {
     const requestChars = async (offset, initial) => {
         initial ? onToggleIsActiveLoadMoreBtn(true) : onToggleIsActiveLoadMoreBtn(false);
         const chars = await getCharacters(offset);
-        console.log(chars);
         onCharsLoaded(chars);
         onToggleIsActiveLoadMoreBtn(true);
     }
@@ -41,7 +40,6 @@ const CharList = ({setActiveChar}) => {
     }
 
     const onUploadChars = () => {
-        console.log('upload');
         requestChars(offset, false);
     }
 
@@ -51,12 +49,10 @@ const CharList = ({setActiveChar}) => {
 
     const onSetActiveChar = (id) => {
         clearError();
-        console.log(id);
         setActiveChar(id);
     }
 
     const itemRef = useRef([]);
-    console.log(itemRef);
 
     const focusOnItem = (id) => {
         itemRef.current.forEach(item => item.classList.remove('char__item_selected'));
@@ -67,10 +63,6 @@ const CharList = ({setActiveChar}) => {
     const spinner = loading && isActiveLoadMoreBtn ? <Spinner/> : null;
     const errorMessage = error ? <ErrorMessage/> : null;
 
-    // console.log('render charList');
-    /*console.log(charsEnded);
-    console.log(chars.length);
-    debugger;*/
     return (
         <div className="char__list">
             {errorMessage}

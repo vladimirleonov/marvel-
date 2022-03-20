@@ -2,7 +2,7 @@ import React, {useState} from "react";
 import {
     BrowserRouter,
     Routes,
-    Route,
+    Route
 } from "react-router-dom";
 
 import AppHeader from "../appHeader/AppHeader";
@@ -14,7 +14,7 @@ import decoration from '../../resources/img/vision.png';
 import ErrorBoundary from "../errorBoundary/ErrorBoundary";
 import AppBanner from "../appBanner/AppBanner";
 import ComicsList from "../comicsList/ComicsList";
-import SingleComic from "../singleComic/SingleComic";
+import {MainPage, ComicsPage, Page404, SingleComicPage} from '../../pages/index'
 
 const App = () => {
 
@@ -24,50 +24,14 @@ const App = () => {
                 <AppHeader/>
                 <main>
                     <Routes>
-                        <Route path="/" element={<Characters/>}/>
-                        <Route path="/characters" element={<Characters/>}/>
-                        <Route path="/comics" element={<Comics/>}>
-                            <Route path=":comicId" element={<SingleComic/>} />
-                        </Route>
+                        <Route path="/" element={<MainPage/>}/>
+                        <Route path="comics" element={<ComicsPage/>}/>
+                        <Route path="comics/:comicId" element={<SingleComicPage/>} />
+                        <Route path="*" element={<Page404/>} />
                     </Routes>
                 </main>
             </div>
         </BrowserRouter>
-    )
-}
-
-const Characters = () => {
-
-    const [activeChar, setActiveChar] = useState(null);
-
-    const onSetActiveChar = (id) => {
-        setActiveChar(id)
-    }
-
-    return (
-        <>
-            <ErrorBoundary>
-                <RandomChar/>
-            </ErrorBoundary>
-            <div className="char__content">
-                <ErrorBoundary>
-                    <CharList setActiveChar={onSetActiveChar}/>
-                </ErrorBoundary>
-                <ErrorBoundary>
-                    <CharInfo activeChar={activeChar}/>
-                </ErrorBoundary>
-            </div>
-            <img className="bg-decoration" src={decoration} alt="vision"/>
-        </>
-    )
-}
-
-const Comics = () => {
-    return (
-        <>
-            <AppBanner/>
-            <ComicsList/>
-        </>
     )
 }
 

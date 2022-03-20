@@ -79,7 +79,7 @@ const View = ({char}) =>  {
                                 </li>)
                         })
                         :
-                        'There is no comics'
+                        'There is no comicsPage'
                 }
             </ul>
         </>

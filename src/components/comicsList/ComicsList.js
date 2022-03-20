@@ -16,9 +16,6 @@ const ComicsList = () => {
 
     const {loading, error, getComics} = useMarvelService();
 
-    console.log(offset);
-
-
     useEffect(() => {
         requestComics(offset, true)
     }, []);
@@ -26,7 +23,6 @@ const ComicsList = () => {
     const requestComics = async (offset, initial) => {
         !initial ? setIsActiveLoadMoreBtn(false) : setIsActiveLoadMoreBtn(true)
         const comicz = await getComics(offset);
-        console.log(comicz);
         onComicsLoaded(comicz);
         setIsActiveLoadMoreBtn(true);
     }
@@ -48,17 +44,26 @@ const ComicsList = () => {
 
     const spinner = loading && isActiveLoadMoreBtn ? <Spinner/> : null;
     const errorMessage = error ? <ErrorMessage/> : null;
-
-    /*console.log(comics);
-    console.log(comicsEnded);
-    debugger;*/
+    const content = comics.length > 0 && !errorMessage && !spinner &&
+        <View comics={comics}
+              comicsEnded={comicsEnded}
+              onUploadChars={onUploadChars}
+              isActiveLoadMoreBtn={isActiveLoadMoreBtn}/>
 
     return (
-        <div className="comics__list">
+        <>
             {spinner}
             {errorMessage}
+            {content}
+        </>
+    )
+}
+
+const View = ({comics, comicsEnded, onUploadChars, isActiveLoadMoreBtn}) => {
+    return (
+        <div className="comics__list">
             <ul className="comics__grid">
-                {comics.length > 0 && !errorMessage && !spinner &&
+                {
                     comics.map((comic, index) =>
                         <Link  key={index} to={`/comics/${comic.id}`}>
                             <img src={comic.image ? comic.image : uw} alt="ultimate war" className="comics__item-img"/>
@@ -67,13 +72,6 @@ const ComicsList = () => {
                         </Link>
                     )
                 }
-                {/*<li className="comics__item">
-                    <a href="#">
-                        <img src={uw} alt="ultimate war" className="comics__item-img"/>
-                        <div className="comics__item-name">ULTIMATE X-MEN VOL. 5: ULTIMATE WAR TPB</div>
-                        <div className="comics__item-price">9.99$</div>
-                    </a>
-                </li>*/}
             </ul>
             <button
                 className="button button__main button__long"
@@ -84,7 +82,6 @@ const ComicsList = () => {
                 <div className="inner">load more</div>
             </button>
         </div>
-
     )
 }
 
