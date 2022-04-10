@@ -1,7 +1,10 @@
 import React, {useEffect, useRef, useState} from "react";
 import PropTypes from 'prop-types';
 
-import MarvelService from "../../services/MarvelService";
+import {
+    CSSTransition,
+    TransitionGroup,
+} from 'react-transition-group';
 
 import './charList.scss';
 import useMarvelService from "../../services/MarvelService";
@@ -69,22 +72,29 @@ const CharList = ({setActiveChar}) => {
             {spinner}
             {
                 !errorMessage && !spinner &&
-                <ul className="char__grid">
-                    {chars.map((item, i) =>
-                        <li key={item.id}
-                            className="char__item"
-                            ref={el => itemRef.current[i] = el}
-                            onClick={() => {
-                                onSetActiveChar(item.id)
-                                focusOnItem(i)
-                            }}
-                        >
-                            <img src={item.thumbnail} alt="abyss"/>
-                            <div className="char__name">{item.name}</div>
-                        </li>
-                    )}
-                    {/*className="char__item char__item_selected*/}
-                </ul>
+                <TransitionGroup>
+                    <ul className="char__grid">
+                        {chars.map((item, i) =>
+                            <CSSTransition
+                                key={item.id}
+                                timeout={300}
+                                className="char__item"
+                            >
+                                <li className="char__item"
+                                    ref={el => itemRef.current[i] = el}
+                                    onClick={() => {
+                                        onSetActiveChar(item.id)
+                                        focusOnItem(i)
+                                    }}
+                                >
+                                    <img src={item.thumbnail} alt="abyss"/>
+                                    <div className="char__name">{item.name}</div>
+                                </li>
+                            </CSSTransition>
+                        )}
+                        {/*className="char__item char__item_selected*/}
+                    </ul>
+                </TransitionGroup>
             }
                 <button
                     className="button button__main button__long"
