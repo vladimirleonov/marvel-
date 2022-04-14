@@ -72,29 +72,40 @@ const CharList = ({setActiveChar}) => {
             {spinner}
             {
                 !errorMessage && !spinner &&
-                <TransitionGroup>
                     <ul className="char__grid">
+                        <TransitionGroup component={null}>
                         {chars.map((item, i) =>
                             <CSSTransition
                                 key={item.id}
-                                timeout={300}
+                                timeout={500}
                                 className="char__item"
                             >
-                                <li className="char__item"
+                                <li
+                                    className="char__item"
+                                    tabIndex={0}
                                     ref={el => itemRef.current[i] = el}
                                     onClick={() => {
                                         onSetActiveChar(item.id)
                                         focusOnItem(i)
                                     }}
+                                    onKeyPress={(e) => {
+                                        if (e.key === ' ' || e.key === "Enter") {
+                                            onSetActiveChar(item.id)
+                                            focusOnItem(i)
+                                        }
+                                    }}>
                                 >
-                                    <img src={item.thumbnail} alt="abyss"/>
+                                    <img
+                                        src={item.thumbnail}
+                                        alt="abyss"
+                                        style={item.thumbnail === 'http://i.annihil.us/u/prod/marvel/i/mg/b/40/image_not_available.jpg' ? {'objectFit' : 'unset'} : null}
+                                    />
                                     <div className="char__name">{item.name}</div>
                                 </li>
                             </CSSTransition>
                         )}
-                        {/*className="char__item char__item_selected*/}
+                        </TransitionGroup>
                     </ul>
-                </TransitionGroup>
             }
                 <button
                     className="button button__main button__long"
