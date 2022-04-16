@@ -37,8 +37,8 @@ const CharList = ({setActiveChar}) => {
             debugger;
             ended = true;
         }
-        setChars([...chars, ...newChars]);
         setOffset(offset + 9);
+        setChars([...chars, ...newChars]);
         setCharsEnded(ended);
     }
 
@@ -63,6 +63,49 @@ const CharList = ({setActiveChar}) => {
         itemRef.current[id].focus();
     }
 
+    const renderItems = (chars) => {
+        console.log('render chars');
+        const items = chars.map((item, i) =>
+            <CSSTransition
+                key={item.id}
+                timeout={500}
+                classNames="char__item"
+            >
+                <li
+                    className="char__item"
+                    tabIndex={0}
+                    ref={el => itemRef.current[i] = el}
+                    onClick={() => {
+                        onSetActiveChar(item.id)
+                        focusOnItem(i)
+                    }}
+                    onKeyPress={(e) => {
+                        if (e.key === ' ' || e.key === "Enter") {
+                            onSetActiveChar(item.id)
+                            focusOnItem(i)
+                        }
+                    }}>
+                    >
+                    <img
+                        src={item.thumbnail}
+                        alt={item.name}
+                        style={item.thumbnail === 'http://i.annihil.us/u/prod/marvel/i/mg/b/40/image_not_available.jpg' ? {'objectFit' : 'unset'} : null}
+                    />
+                    <div className="char__name">{item.name}</div>
+                </li>
+            </CSSTransition>
+        )
+        return (
+            <ul className="char__grid">
+                <TransitionGroup component={null}>
+                    {items}
+                </TransitionGroup>
+            </ul>
+        )
+    }
+
+    const items = renderItems(chars);
+
     const spinner = loading && isActiveLoadMoreBtn ? <Spinner/> : null;
     const errorMessage = error ? <ErrorMessage/> : null;
 
@@ -70,51 +113,15 @@ const CharList = ({setActiveChar}) => {
         <div className="char__list">
             {errorMessage}
             {spinner}
-            {
-                !errorMessage && !spinner &&
-                    <ul className="char__grid">
-                        <TransitionGroup component={null}>
-                        {chars.map((item, i) =>
-                            <CSSTransition
-                                key={item.id}
-                                timeout={500}
-                                className="char__item"
-                            >
-                                <li
-                                    className="char__item"
-                                    tabIndex={0}
-                                    ref={el => itemRef.current[i] = el}
-                                    onClick={() => {
-                                        onSetActiveChar(item.id)
-                                        focusOnItem(i)
-                                    }}
-                                    onKeyPress={(e) => {
-                                        if (e.key === ' ' || e.key === "Enter") {
-                                            onSetActiveChar(item.id)
-                                            focusOnItem(i)
-                                        }
-                                    }}>
-                                >
-                                    <img
-                                        src={item.thumbnail}
-                                        alt="abyss"
-                                        style={item.thumbnail === 'http://i.annihil.us/u/prod/marvel/i/mg/b/40/image_not_available.jpg' ? {'objectFit' : 'unset'} : null}
-                                    />
-                                    <div className="char__name">{item.name}</div>
-                                </li>
-                            </CSSTransition>
-                        )}
-                        </TransitionGroup>
-                    </ul>
-            }
-                <button
-                    className="button button__main button__long"
-                    style={{'display': charsEnded ? 'none' : 'block'}}
-                    disabled={!isActiveLoadMoreBtn}
-                    onClick={onUploadChars}
-                >
-                <div className="inner">load more</div>
-                </button>
+            {!errorMessage && !spinner && items}
+            <button
+                className="button button__main button__long"
+                style={{'display': charsEnded ? 'none' : 'block'}}
+                disabled={!isActiveLoadMoreBtn}
+                onClick={onUploadChars}
+            >
+            <div className="inner">load more</div>
+            </button>
         </div>
     )
 }
