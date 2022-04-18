@@ -1,7 +1,6 @@
 import React, {useEffect, useState} from "react";
 import './randomChar.scss';
 import mjolnir from '../../resources/img/mjolnir.png';
-import MarvelService from "../../services/MarvelService";
 import Spinner from "../spinner/Spinner";
 import useMarvelService from "../../services/MarvelService";
 import ErrorMessage from "../errorMessage/ErrorMessage";
