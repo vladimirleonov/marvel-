@@ -12,7 +12,7 @@ const setContent = (process, Component, data) => {
             return <Spinner/>
             break;
         case 'confirmed':
-            return <Component data={data}/>
+            return <Component {...data}/>
             break;
         case 'error':
             return <ErrorMessage/>

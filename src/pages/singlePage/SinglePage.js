@@ -1,9 +1,8 @@
 import React, {useEffect, useState} from 'react';
 import {useParams} from "react-router-dom";
 import useMarvelService from "../../services/MarvelService";
-import Spinner from "../../components/spinner/Spinner";
-import ErrorMessage from "../../components/errorMessage/ErrorMessage";
 import AppBanner from "../../components/appBanner/AppBanner";
+import setContent from "../../utils/setContent";
 
 const SinglePage = ({Component, dataType}) => {
 
@@ -11,7 +10,7 @@ const SinglePage = ({Component, dataType}) => {
 
     const [data, setData] = useState(null);
 
-    const {loading, error, clearError, getCharacter, getComic} = useMarvelService();
+    const {getCharacter, getComic, process, setProcess} = useMarvelService();
 
     useEffect(() => {
         requestData(parseInt(id));
@@ -22,13 +21,15 @@ const SinglePage = ({Component, dataType}) => {
             case 'character': {
                 debugger;
                 const data = await getCharacter(id);
-                onDataLoaded(data);
+                await onDataLoaded(data);
+                setProcess('confirmed');
                 break;
             }
             case 'comic': {
                 debugger;
                 const data = await getComic(id);
-                onDataLoaded(data);
+                await onDataLoaded(data);
+                setProcess('confirmed');
                 break;
             }
         }
@@ -38,17 +39,15 @@ const SinglePage = ({Component, dataType}) => {
         setData(data);
     }
 
-    const spinner = loading ? <Spinner/> : null;
+    /*const spinner = loading ? <Spinner/> : null;
     const errorMessage = error ? <ErrorMessage/> : null;
     const content = !spinner && ! errorMessage && data &&
-        <Component data={data}/>
+        <Component data={data}/>*/
 
     return (
         <>
             <AppBanner/>
-            {spinner}
-            {errorMessage}
-            {content}
+            {setContent(process, Component, {data})}
         </>
     );
 };

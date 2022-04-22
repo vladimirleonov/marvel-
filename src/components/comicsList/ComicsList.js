@@ -37,14 +37,14 @@ const ComicsList = () => {
     const[newItemLoading, setNewItemLoading] = useState(false);
     const[comicsEnded, setComicsEnded] = useState(false);
 
-    const {loading, error, getComics, process, setProcess} = useMarvelService();
+    const {getComics, process, setProcess} = useMarvelService();
 
     useEffect(() => {
         requestComics(offset, true)
     }, []);
 
     const requestComics = async (offset, initial) => {
-        !initial ? setNewItemLoading(false) : setNewItemLoading(true)
+        initial ? setNewItemLoading(true) : setNewItemLoading(false)
         const comicz = await getComics(offset);
         await onComicsLoaded(comicz);
         setProcess('confirmed');

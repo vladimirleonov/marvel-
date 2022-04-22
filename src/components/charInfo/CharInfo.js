@@ -32,13 +32,13 @@ const CharInfo = ({activeChar}) => {
 
     return (
         <div className="char__info">
-            {setContent(process, View, char)}
+            {setContent(process, View, {char})}
         </div>
     )
 }
 
-const View = ({data}) =>  {
-    const {name, thumbnail, description, homepage, wiki, comics} = data;
+const View = ({char}) =>  {
+    const {name, thumbnail, description, homepage, wiki, comics} = char;
 
     let imgStyle = {'objectFit': 'cover'};
     if(thumbnail === 'http://i.annihil.us/u/prod/marvel/i/mg/b/40/image_not_available.jpg') {
