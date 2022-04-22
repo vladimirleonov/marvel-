@@ -6,7 +6,7 @@ import setContent from "../../utils/setContent";
 
 const CharInfo = ({activeChar}) => {
     const [char, setChar] = useState(null);
-    const {loading, error, getCharacter, process, setProcess} = useMarvelService();
+    const {getCharacter, process, setProcess} = useMarvelService();
 
     useEffect(() => {
         getChar();

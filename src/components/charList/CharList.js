@@ -10,14 +10,36 @@ import './charList.scss';
 import useMarvelService from "../../services/MarvelService";
 import Spinner from "../spinner/Spinner";
 import ErrorMessage from "../errorMessage/ErrorMessage";
+import Skeleton from "../skeleton/Skeleton";
+
+const setContent = (process, Component, newItemLoading) => {
+    console.log(newItemLoading);
+    switch (process) {
+        case 'waiting':
+            return <Spinner/>
+            break;
+        case 'loading':
+            return newItemLoading ? <Spinner/> : <Component/>
+            break;
+        case 'confirmed':
+            return <Component/>
+            break;
+        case 'error':
+            return <ErrorMessage/>
+            break;
+        default:
+            throw new Error('Unexpected process state');
+    }
+}
 
 const CharList = ({setActiveChar}) => {
     const [chars, setChars] = useState([]);
     const [offset, setOffset] = useState(210);
-    const [isActiveLoadMoreBtn, setIsActiveLoadMoreBtn] = useState(true);
+    /*const [isActiveLoadMoreBtn, setIsActiveLoadMoreBtn] = useState(true);*/
+    const [newItemLoading, setNewItemLoading] = useState(false);
     const [charsEnded, setCharsEnded] = useState(false);
 
-    const {loading, error, clearError, getCharacters} = useMarvelService();
+    const {clearError, getCharacters, process, setProcess} = useMarvelService();
 
     useEffect(() => {
         requestChars(offset, true);
@@ -25,10 +47,11 @@ const CharList = ({setActiveChar}) => {
 
 
     const requestChars = async (offset, initial) => {
-        initial ? onToggleIsActiveLoadMoreBtn(true) : onToggleIsActiveLoadMoreBtn(false);
+        initial ? onToggleLoading(true) : onToggleLoading(false);
         const chars = await getCharacters(offset);
-        onCharsLoaded(chars);
-        onToggleIsActiveLoadMoreBtn(true);
+        await onCharsLoaded(chars);
+        setProcess('confirmed');
+        onToggleLoading(true);
     }
 
     const onCharsLoaded = (newChars) => {
@@ -46,8 +69,8 @@ const CharList = ({setActiveChar}) => {
         requestChars(offset, false);
     }
 
-    const onToggleIsActiveLoadMoreBtn = (value) => {
-        setIsActiveLoadMoreBtn(value);
+    const onToggleLoading = (value) => {
+        setNewItemLoading(value);
     }
 
     const onSetActiveChar = (id) => {
@@ -104,20 +127,19 @@ const CharList = ({setActiveChar}) => {
         )
     }
 
-    const items = renderItems(chars);
-
-    const spinner = loading && isActiveLoadMoreBtn ? <Spinner/> : null;
-    const errorMessage = error ? <ErrorMessage/> : null;
+    /*const spinner = loading && isActiveLoadMoreBtn ? <Spinner/> : null;
+    const errorMessage = error ? <ErrorMessage/> : null;*/
 
     return (
         <div className="char__list">
-            {errorMessage}
+            {/*{errorMessage}
             {spinner}
-            {!errorMessage && !spinner && items}
+            {!errorMessage && !spinner && items}*/}
+            {setContent(process, () => renderItems(chars), newItemLoading)}
             <button
                 className="button button__main button__long"
                 style={{'display': charsEnded ? 'none' : 'block'}}
-                disabled={!isActiveLoadMoreBtn}
+                disabled={!newItemLoading}
                 onClick={onUploadChars}
             >
             <div className="inner">load more</div>
