@@ -10,7 +10,6 @@ import './charList.scss';
 import useMarvelService from "../../services/MarvelService";
 import Spinner from "../spinner/Spinner";
 import ErrorMessage from "../errorMessage/ErrorMessage";
-import Skeleton from "../skeleton/Skeleton";
 
 const setContent = (process, Component, newItemLoading) => {
     console.log(newItemLoading);
@@ -132,9 +131,6 @@ const CharList = ({setActiveChar}) => {
 
     return (
         <div className="char__list">
-            {/*{errorMessage}
-            {spinner}
-            {!errorMessage && !spinner && items}*/}
             {setContent(process, () => renderItems(chars), newItemLoading)}
             <button
                 className="button button__main button__long"

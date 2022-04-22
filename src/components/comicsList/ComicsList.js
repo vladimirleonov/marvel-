@@ -10,24 +10,45 @@ import {
     TransitionGroup,
 } from 'react-transition-group';
 
+const setContent = (process, Component, data,  newItemLoading) => {
+    console.log(newItemLoading);
+    switch (process) {
+        case 'waiting':
+            return <Spinner/>
+            break;
+        case 'loading':
+            return newItemLoading ? <Spinner/> : <Component {...data}/>
+            break;
+        case 'confirmed':
+            return <Component {...data}/>
+            break;
+        case 'error':
+            return <ErrorMessage/>
+            break;
+        default:
+            throw new Error('Unexpected process state');
+    }
+}
+
 const ComicsList = () => {
 
     const[comics, setComics] = useState([]);
     const[offset, setOffset] = useState(120);
-    const[isActiveLoadMoreBtn, setIsActiveLoadMoreBtn] = useState(true);
+    const[newItemLoading, setNewItemLoading] = useState(false);
     const[comicsEnded, setComicsEnded] = useState(false);
 
-    const {loading, error, getComics} = useMarvelService();
+    const {loading, error, getComics, process, setProcess} = useMarvelService();
 
     useEffect(() => {
         requestComics(offset, true)
     }, []);
 
     const requestComics = async (offset, initial) => {
-        !initial ? setIsActiveLoadMoreBtn(false) : setIsActiveLoadMoreBtn(true)
+        !initial ? setNewItemLoading(false) : setNewItemLoading(true)
         const comicz = await getComics(offset);
-        onComicsLoaded(comicz);
-        setIsActiveLoadMoreBtn(true);
+        await onComicsLoaded(comicz);
+        setProcess('confirmed');
+        setNewItemLoading(true);
     }
 
     const onComicsLoaded = (newComics) => {
@@ -45,7 +66,7 @@ const ComicsList = () => {
         requestComics(offset, false);
     }
 
-    const spinner = loading && isActiveLoadMoreBtn ? <Spinner/> : null;
+    /*const spinner = loading && newItemLoading ? <Spinner/> : null;
     const errorMessage = error ? <ErrorMessage/> : null;
     const content = comics.length > 0
         && !errorMessage
@@ -53,19 +74,22 @@ const ComicsList = () => {
         <View comics={comics}
               comicsEnded={comicsEnded}
               onUploadChars={onUploadChars}
-              isActiveLoadMoreBtn={isActiveLoadMoreBtn}
-        />
+              isActiveLoadMoreBtn={newItemLoading}
+        />*/
 
     return (
         <>
-            {spinner}
-            {errorMessage}
-            {content}
+            {setContent(
+                process,
+                View,
+                {comics, comicsEnded, onUploadChars, newItemLoading},
+                newItemLoading
+            )}
         </>
     )
 }
 
-const View = ({comics, comicsEnded, onUploadChars, isActiveLoadMoreBtn}) => {
+const View = ({comics, comicsEnded, onUploadChars, newItemLoading}) => {
 
     const renderItems = (comics) => {
         console.log('render comics');
@@ -104,35 +128,11 @@ const View = ({comics, comicsEnded, onUploadChars, isActiveLoadMoreBtn}) => {
     return (
         <div className="comics__list">
             {items}
-            {/*<ul className="comics__grid">
-                <TransitionGroup component={null}>
-                    {
-                        comics.map((comic, index) => {
-                            return (
-                                <CSSTransition
-                                    key={index}
-                                    timeout={500}
-                                    classNames="comics__item"
-                                >
-                                    <li className="comics__item">
-                                        <Link to={`/comics/${comic.id}`}>
-                                            <img src={comic.image ? comic.image : uw} alt={comic.title}
-                                                 className="comics__item-img"/>
-                                            <div className="comics__item-name">{comic.title}</div>
-                                            <div className="comics__item-price">{comic.price}</div>
-                                        </Link>
-                                    </li>
-                                </CSSTransition>
-                            )
-                        })
-                    }
-                </TransitionGroup>
-            </ul>*/}
             <button
                 className="button button__main button__long"
                 style={{'display': comicsEnded ? 'none' : 'block'}}
                 onClick={onUploadChars}
-                disabled={!isActiveLoadMoreBtn}
+                disabled={!newItemLoading}
             >
                 <div className="inner">load more</div>
             </button>
