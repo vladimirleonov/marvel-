@@ -1,5 +1,4 @@
 import './singleComicPage.scss';
-import xMen from '../../resources/img/x-men.png';
 import {Link, useParams} from "react-router-dom";
 import React, {useEffect, useState} from "react";
 import useMarvelService from "../../services/MarvelService";
@@ -11,7 +10,7 @@ const SingleComicPage = () => {
     let {comicId} = useParams();
     const [comic, setComic] = useState();
 
-    const {loading, error, clearError, getComic} = useMarvelService();
+    const {loading, error, getComic} = useMarvelService();
 
     useEffect(() => {
         requestComic(parseInt(comicId));

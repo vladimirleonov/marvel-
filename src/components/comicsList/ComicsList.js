@@ -66,17 +66,6 @@ const ComicsList = () => {
         requestComics(offset, false);
     }
 
-    /*const spinner = loading && newItemLoading ? <Spinner/> : null;
-    const errorMessage = error ? <ErrorMessage/> : null;
-    const content = comics.length > 0
-        && !errorMessage
-        && !spinner &&
-        <View comics={comics}
-              comicsEnded={comicsEnded}
-              onUploadChars={onUploadChars}
-              isActiveLoadMoreBtn={newItemLoading}
-        />*/
-
     return (
         <>
             {setContent(

@@ -25,11 +25,6 @@ const CharInfo = ({activeChar}) => {
         setChar(char)
     }
 
-    /*const spinner = loading ? <Spinner/> : null;
-    const errorMessage = error ? <ErrorMessage/> : null;
-    const skeleton = !char && !loading && !error ? <Skeleton/> : null;
-    const content = !loading && char && !error ? <View char={char}/> : null;*/
-
     return (
         <div className="char__info">
             {setContent(process, View, {char})}

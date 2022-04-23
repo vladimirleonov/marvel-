@@ -34,16 +34,14 @@ const setContent = (process, Component, newItemLoading) => {
 const CharList = ({setActiveChar}) => {
     const [chars, setChars] = useState([]);
     const [offset, setOffset] = useState(210);
-    /*const [isActiveLoadMoreBtn, setIsActiveLoadMoreBtn] = useState(true);*/
     const [newItemLoading, setNewItemLoading] = useState(false);
     const [charsEnded, setCharsEnded] = useState(false);
 
-    const {clearError, getCharacters, process, setProcess} = useMarvelService();
+    const {getCharacters, process, setProcess} = useMarvelService();
 
     useEffect(() => {
         requestChars(offset, true);
     }, [])
-
 
     const requestChars = async (offset, initial) => {
         initial ? onToggleLoading(true) : onToggleLoading(false);
@@ -72,11 +70,6 @@ const CharList = ({setActiveChar}) => {
         setNewItemLoading(value);
     }
 
-    const onSetActiveChar = (id) => {
-        clearError();
-        setActiveChar(id);
-    }
-
     const itemRef = useRef([]);
 
     const focusOnItem = (id) => {
@@ -98,12 +91,12 @@ const CharList = ({setActiveChar}) => {
                     tabIndex={0}
                     ref={el => itemRef.current[i] = el}
                     onClick={() => {
-                        onSetActiveChar(item.id)
+                        setActiveChar(item.id)
                         focusOnItem(i)
                     }}
                     onKeyPress={(e) => {
                         if (e.key === ' ' || e.key === "Enter") {
-                            onSetActiveChar(item.id)
+                            setActiveChar(item.id)
                             focusOnItem(i)
                         }
                     }}>
@@ -125,9 +118,6 @@ const CharList = ({setActiveChar}) => {
             </ul>
         )
     }
-
-    /*const spinner = loading && isActiveLoadMoreBtn ? <Spinner/> : null;
-    const errorMessage = error ? <ErrorMessage/> : null;*/
 
     return (
         <div className="char__list">

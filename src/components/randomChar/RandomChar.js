@@ -46,7 +46,6 @@ const RandomChar = () => {
 
     const getCroppedString = (str, n) => {
         let wordsArr = str.split(" ");
-        /*console.log(wordsArr);*/
 
         let croppedWordsArr = [];
 
@@ -76,16 +75,8 @@ const RandomChar = () => {
         description = char.description
     }
 
-    /*const errorMessage = error ? <ErrorMessage/> : null;
-    const spinner = loading && !error ? <Spinner/> : null;
-    const content = (!error && !loading) ?
-        <View char={char} description={description}/> : null;*/
-
     return (
         <div className="randomchar">
-            {/*{errorMessage}
-            {spinner}
-            {content}*/}
             {setContent(process, View, {char, description})}
             <div className="randomchar__static">
                 <p className="randomchar__title">

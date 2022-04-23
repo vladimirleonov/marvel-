@@ -39,11 +39,6 @@ const SinglePage = ({Component, dataType}) => {
         setData(data);
     }
 
-    /*const spinner = loading ? <Spinner/> : null;
-    const errorMessage = error ? <ErrorMessage/> : null;
-    const content = !spinner && ! errorMessage && data &&
-        <Component data={data}/>*/
-
     return (
         <>
             <AppBanner/>

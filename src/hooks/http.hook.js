@@ -1,5 +1,4 @@
 import {useCallback, useState} from "react";
-import * as url from "url";
 
 const useHttp = () => {
 
@@ -24,17 +23,16 @@ const useHttp = () => {
 
             const data = await response.json();
 
-            // setProcess('confirmed');
-
             return data;
         } catch (e) {
             setProcess('error');
-
             throw e;
         }
     },[])
 
-    const clearError = useCallback(() => setError(null), [])
+    const clearError = useCallback(() => {
+        setProcess('loading');
+    }, []);
 
     return {request, clearError, process, setProcess}
 }
